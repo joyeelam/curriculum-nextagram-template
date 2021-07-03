@@ -1,6 +1,5 @@
 import os
 
-
 class Config(object):
     DEBUG = False
     TESTING = False
@@ -8,17 +7,14 @@ class Config(object):
     SECRET_KEY = os.environ.get(
         'SECRET_KEY') or os.urandom(32)
 
-
 class ProductionConfig(Config):
     DEBUG = False
     ASSETS_DEBUG = False
-
 
 class StagingConfig(Config):
     DEVELOPMENT = False
     DEBUG = False
     ASSETS_DEBUG = False
-
 
 class DevelopmentConfig(Config):
     DEVELOPMENT = True

@@ -1,5 +1,6 @@
 body {
-  margin: 0;
+  margin-left: 20px;
+  margin-right: 20px;
   padding-bottom: 15px;
   position: relative;
   min-height: 100vh;
@@ -18,4 +19,15 @@ footer {
 footer a {
   text-decoration: none;
   color: #303030;
+}
+
+.validation_error {
+  font-size: 0.8rem;
+  color: #ff4d4d;
+  list-style-position: inside;
+  padding-left: 0;
+}
+
+.navbar-brand {
+  font-size: 1.3rem;
 }
