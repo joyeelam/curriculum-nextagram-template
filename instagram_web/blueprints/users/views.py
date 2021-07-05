@@ -5,7 +5,6 @@ users_blueprint = Blueprint('users',
                             __name__,
                             template_folder='templates')
 
-
 @users_blueprint.route('/new', methods=['GET'])
 def new():
     return render_template('users/new.html')
@@ -18,7 +17,7 @@ def create():
     user = User(username=username, email=email, password=password)
     if user.save():
         flash("User successfully created!")
-        return redirect(url_for('users.new'))
+        return redirect(url_for('users.index'))
     else:
         return render_template("users/new.html", username=request.form['username'], email=request.form['email'], errors=user.errors)
 
@@ -28,7 +27,8 @@ def show(username):
 
 @users_blueprint.route('/', methods=["GET"])
 def index():
-    return "USERS"
+    # return "USERS"
+    return render_template('session/new.html')
 
 @users_blueprint.route('/<id>/edit', methods=['GET'])
 def edit(id):

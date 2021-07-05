@@ -12,18 +12,7 @@ class User(BaseModel):
     def validate(self):
 
         password_regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$"
-        check_password = re.search(password_regex, self.password)
-        if check_password:
-            self.password = generate_password_hash(self.password)
-        else:
-            self.errors.extend(["Password should be longer than 6 characters", "Password should have both uppercase and lowercase characters", "Password should have at least one special character"])
-
         email_regex = "\S+@\S+\.\S+"
-        check_email = re.search(email_regex, self.email)
-        if check_email:
-            return self.email
-        else:
-            self.errors.append("Email not valid")
 
         duplicate_username = User.get_or_none(User.username == self.username)
         duplicate_email = User.get_or_none(User.email == self.email)
@@ -32,3 +21,15 @@ class User(BaseModel):
             self.errors.append('Username not unique')
         if duplicate_email:
             self.errors.append('Email not unique')
+
+        check_password = re.search(password_regex, self.password)
+        if check_password:
+            self.password = generate_password_hash(self.password)
+        else:
+            self.errors.extend(["Password should be longer than 6 characters", "Password should have both uppercase and lowercase characters", "Password should have at least one special character"])
+
+        check_email = re.search(email_regex, self.email)
+        if check_email:
+            return self.email
+        else:
+            self.errors.append("Email not valid")
