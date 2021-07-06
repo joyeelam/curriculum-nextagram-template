@@ -22,7 +22,7 @@ def create():
             remember = True if request.form.get('remember') else False
             login_user(user, remember = remember)
             flash("Welcome back! We've missed you.")
-            return redirect(url_for("sessions.test"))
+            return redirect(url_for("sessions.index"))
         else:
             flash("Uh oh, your username and/or password do not match. Please try again!", "error")
             return render_template('sessions/new.html')
@@ -47,11 +47,11 @@ def create():
     #     flash("Sorry, we couldn't find an account with that username.", "error")
     #     return render_template('sessions/new.html')
 
-@sessions_blueprint.route('/test')
+@sessions_blueprint.route('/profile')
 @login_required
-def test():
+def index():
     # option 2: using flask-login
-    return render_template('sessions/test.html', name=current_user.username)
+    return render_template('sessions/profile.html', name=current_user.username)
 
     # # option 1: manage sessions manually
     # if 'user_id' in session:
