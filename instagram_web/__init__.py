@@ -32,7 +32,7 @@ def internal_server_error(e):
 def home():
     users = User.select()
     return render_template('home.html', users=users)
-    
+
 @login_manager.user_loader
 def load_user(user_id):
-    return User.get_by_id(int(user_id))
+    return User.get_or_none(user_id)

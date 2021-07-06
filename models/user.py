@@ -19,27 +19,27 @@ class User(BaseModel, UserMixin):
         duplicate_email = User.get_or_none(User.email == self.email)
 
         if duplicate_username:
-            self.errors.append('Username not unique')
+            self.errors["Username"] = "Username already exists"
         if duplicate_email:
-            self.errors.append('Email not unique')
+            self.errors["Email"] = "Email already exists"
 
         if self.username.strip() == "":
-            self.errors.append('Username is required')
+            self.errors["Username"] = "Username is required"
 
         if self.password.strip() == "":
-            self.errors.append('Password is required')
+            self.errors["Password"] = "Password is required"
         else:
             check_password = re.search(password_regex, self.password)
             if check_password:
                 self.password = generate_password_hash(self.password)
             else:
-                self.errors.extend(["Password should be longer than 6 characters", "Password should have both uppercase and lowercase characters", "Password should have at least one special character"])
+                self.errors["Password2"] = ["Password should be longer than 6 characters", "Password should have both uppercase and lowercase characters", "Password should have at least one special character"]
 
         if self.email.strip() == "":
-            self.errors.append('Email is required')
+            self.errors["Email"] = "Email is required"
         else:
             check_email = re.search(email_regex, self.email)
             if check_email:
                 return self.email
             else:
-                self.errors.append("Email not valid")
+                self.errors["Email"] = "Email format not valid"

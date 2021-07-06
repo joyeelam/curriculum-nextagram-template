@@ -17,30 +17,29 @@
       <div class="form-group">
         <label for="username">Username:</label>
         <input required type="text" name="username" class="form-control" value={{username}}>
-        {% for error in errors if errors|length > 0 %}
-          {% if 'Username' in error %}
-            <div class="validation_error">{{error}}</div>
-          {% endif %}
-        {% endfor %}
+        {% if errors|length > 0 %}
+          <div class="validation_error">{{errors["Username"]}}</div>
+        {% endif %}
       </div>
       <div class="form-group">
         <label for="email">Email:</label>
         <input required type="email" name="email" class="form-control" value={{email}}>
-        {% for error in errors if errors|length > 0 %}
-          {% if 'Email' in error %}
-            <div class="validation_error">{{error}}</div>
-          {% endif %}
-        {% endfor %}
+        {% if errors|length > 0 %}
+          <div class="validation_error">{{errors["Email"]}}</div>
+        {% endif %}
       </div>
       <div class="form-group">
         <label for="password">Password:</label>
         <input required type="password" name="password" class="form-control">
+        {% if errors|length > 0 %}
+          <div class="validation_error">{{errors["Password"]}}</div>
+        {% endif %}
         <ul class="validation_error">
-          {% for error in errors if errors|length > 0 %}
-            {% if 'Password' in error %}
+          {% if errors|length > 0 %}
+            {% for error in errors["Password2"] %}
               <li>{{error}}</li>
-            {% endif %}
-          {% endfor %}
+            {% endfor %}
+          {% endif %}
         </ul>
       </div>
       <button type="submit" class="btn btn-primary">Add User</button>
