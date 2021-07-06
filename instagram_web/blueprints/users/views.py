@@ -17,8 +17,9 @@ def create():
     user = User(username=username, email=email, password=password)
     if user.save():
         flash("User successfully created!")
-        return redirect(url_for('users.index'))
+        return redirect(url_for('sessions.new'))
     else:
+        flash("Oh no, something went wrong. Please try again!", "error")
         return render_template("users/new.html", username=request.form['username'], email=request.form['email'], errors=user.errors)
 
 @users_blueprint.route('/<username>', methods=["GET"])
@@ -27,8 +28,7 @@ def show(username):
 
 @users_blueprint.route('/', methods=["GET"])
 def index():
-    # return "USERS"
-    return render_template('session/new.html')
+    return "USERS"
 
 @users_blueprint.route('/<id>/edit', methods=['GET'])
 def edit(id):

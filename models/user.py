@@ -2,8 +2,9 @@ from models.base_model import BaseModel
 import peewee as pw
 import re
 from werkzeug.security import generate_password_hash
+from flask_login import UserMixin
 
-class User(BaseModel):
+class User(BaseModel, UserMixin):
 
     username = pw.CharField(unique=True, null=False)
     email = pw.CharField(unique=True, null=False)
@@ -22,14 +23,23 @@ class User(BaseModel):
         if duplicate_email:
             self.errors.append('Email not unique')
 
-        check_password = re.search(password_regex, self.password)
-        if check_password:
-            self.password = generate_password_hash(self.password)
-        else:
-            self.errors.extend(["Password should be longer than 6 characters", "Password should have both uppercase and lowercase characters", "Password should have at least one special character"])
+        if self.username.strip() == "":
+            self.errors.append('Username is required')
 
-        check_email = re.search(email_regex, self.email)
-        if check_email:
-            return self.email
+        if self.password.strip() == "":
+            self.errors.append('Password is required')
         else:
-            self.errors.append("Email not valid")
+            check_password = re.search(password_regex, self.password)
+            if check_password:
+                self.password = generate_password_hash(self.password)
+            else:
+                self.errors.extend(["Password should be longer than 6 characters", "Password should have both uppercase and lowercase characters", "Password should have at least one special character"])
+
+        if self.email.strip() == "":
+            self.errors.append('Email is required')
+        else:
+            check_email = re.search(email_regex, self.email)
+            if check_email:
+                return self.email
+            else:
+                self.errors.append("Email not valid")

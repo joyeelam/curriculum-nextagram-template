@@ -1,6 +1,5 @@
 body {
-  margin-left: 20px;
-  margin-right: 20px;
+  background-color: #f2f2f2;
   padding-bottom: 15px;
   position: relative;
   min-height: 100vh;
@@ -33,12 +32,21 @@ footer a {
 }
 
 .jumbotron {
-  background-color: #f2f2f2;
+  background-color: inherit;
 }
 
-.header-container {
+.center-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  text-align: center;
+}
+
+.temp-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
 }

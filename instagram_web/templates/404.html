@@ -1,0 +1,11 @@
+{% extends "_layout.html" %}
+
+{% block content %}
+  <div class="jumbotron center-container">
+    <lottie-player src="https://assets10.lottiefiles.com/private_files/lf30_tonsVH.json" background="transparent" speed="1" style="width: 400px; height: 400px;" loop autoplay></lottie-player>
+    <h1 class="lead">Oops!</h1>
+    <small class="text-muted">We can't seem to find the page you are looking for</small>
+    <br/>
+    <button type="button" class="btn btn-secondary"><a href="{{ url_for('home') }}" style="color:inherit">Go Back</a></button>
+  </div>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends "_layout.html" %}
+
+{% block content %}
+  <div class="jumbotron center-container">
+    <lottie-player src="https://assets7.lottiefiles.com/packages/lf20_q5pk6p1k.json" background="transparent" speed="1" style="width: 350px; height: 350px;" loop autoplay></lottie-player>
+    <h1 class="lead">Wait a minute!</h1>
+    <small class="text-muted">Only authorized users allowed beyond this point. Do not worry though, there is always a way to go back home.</small>
+    <br/>
+    <button type="button" class="btn btn-secondary"><a href="{{ url_for('home') }}" style="color:inherit">Go Back</a></button>
+  </div>
+{% endblock %}
