@@ -35,4 +35,4 @@ def home():
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.get_or_none(user_id)
+    return User.get_or_none(User.id == user_id)
