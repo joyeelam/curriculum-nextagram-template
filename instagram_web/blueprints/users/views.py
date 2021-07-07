@@ -5,7 +5,6 @@ from werkzeug.utils import secure_filename
 from models.user import User
 from instagram_web.util.helpers import upload_file_to_s3, allowed_file
 
-
 users_blueprint = Blueprint('users',
                             __name__,
                             template_folder='templates')
@@ -35,7 +34,7 @@ def create():
 def edit(id):
     user = User.get_by_id(id)
     if current_user == user:
-        return render_template('users/profile.html')
+        return render_template('users/edit.html')
     else:
         flash("Uh oh! That wasn't your profile, we've retrieved your profile instead.", "error")
         return redirect(url_for('users.edit', id=current_user.id))
@@ -59,11 +58,16 @@ def update(id):
         for key in new_info:
             # print(f"{key}: {new_info[key]}")
             setattr(user, key, new_info[key])
-        flash("Profile successfully updated.")
-        return render_template('sessions/landing.html')
+            user.save()
+        if user.save():
+            flash("Profile successfully updated.")
+            return redirect(url_for('users.show', username=current_user.username))
+        else:
+            flash("Oh no, something went wrong. Please try again!", "error")
+            return render_template("users/edit.html", errors=user.errors)
     else:
         flash("Oh no, something went wrong. Please try again", "error")
-        return render_template('users/profile.html', errors=user.errors)
+        return redirect(url_for('users.edit', id=current_user.id))
 
 # upload profile picture via aws s3
 @users_blueprint.route('/<id>/upload', methods=['POST'])
@@ -76,18 +80,20 @@ def upload(id):
     if file and allowed_file(file.filename):
         file.filename = secure_filename(file.filename)
         image_path = upload_file_to_s3(file, app.config['S3_BUCKET'])
-        print(image_path)
+        # print(image_path)
         user.profile_image = image_path
         if user.save():
             flash("Image uploaded successfully")
-            return render_template('users/profile.html')
+            return redirect(url_for('users.show', username=current_user.username))
         else:
+            print(user.errors)
             flash("Error occurred", "error")
             return redirect(url_for('users.edit', id=current_user.id))
 
 @users_blueprint.route('/<username>', methods=["GET"])
+@login_required
 def show(username):
-    pass
+    return render_template('users/show.html')
 
 @users_blueprint.route('/', methods=["GET"])
 def index():

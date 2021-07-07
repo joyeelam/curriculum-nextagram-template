@@ -18,36 +18,6 @@
       <script type="text/javascript" src="{{ ASSET_URL }}"></script>
     {% endassets %}
 
-    <!-- {% block header %} -->
-      <nav class = "navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="{{ url_for('home') }}"><i class="fas fa-signature"></i> Nextagram</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav ml-auto">
-            {% if not current_user.is_authenticated %}
-              <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('users.new') }}">Sign Up</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('sessions.new') }}">Sign In</a>
-              </li>
-            {% endif %}
-            {% if current_user.is_authenticated %}
-              <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('users.edit', id=current_user.id) }}">Edit Profile</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('sessions.destroy') }}">Log Out</a>
-              </li>
-            {% endif %}
-          </ul>
-        </div>
-      </nav>
-    <!-- {% endblock %} -->
-
     <title>
       {% block title %}
       {% endblock %}NEXTAGRAM
@@ -55,6 +25,7 @@
 
   </head>
   <body>
+    {% include "navbar.html" %}
     {% for message in get_flashed_messages() %}
       {% with errors = get_flashed_messages(category_filter=["error"]) %}
         {% if errors %}
