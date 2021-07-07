@@ -14,12 +14,17 @@
 6. Overall nicely done! Good job on understanding the docs and setting up flask-login! -->
 
 <!-- 7 July 2021 -->
----- current issues ----
+<!-- ---- current issues ----
 - users.update only works if all fields are provided new values even though setattr should only apply if there is a key (empty fields checked to make sure no new keys are created)
 - when tried uploading image, received werkzeug.exceptions.HTTPException.wrap.<locals>.newcls: 400 Bad Request: KeyError: 'username'
 which refers to users/views.py line 49 - however, users.update works on its own, but cause an error in users.upload < is there a reason/correlation to this? does clicking upload also causes a submit for the users.update form?
 
 ---- feedback/comments ----
-1. You might wanna first fix the logic error in the update first, because right now, it only loops through 1 key, then after that, you save and return, which ends the function, meaning the other keys don't get saved
+1. You might wanna first fix the logic error in the update first, because right now, it only loops through 1 key, then after that, you save and return, which ends the function, meaning the other keys don't get saved [fixed]
 2. This is a problem with the url that you have, both update and upload have the same url, so it went in the first one, ignoring your upload [fixed]
-- Try fixing these and see if the first problem persists
+- Try fixing these and see if the first problem persists -->
+
+<!-- 8 July 2021 -->
+---- current issues ----
+- password is passed through validation when uploading profile image using users.upload even though the validation has specified "if self.password", this returns an error and doesn't allow the image url to be saved to the database
+- generate_password_hash in models/User/validate doesn't work if the password block (line 16 to line 25) comes after the username block and email block, this problem doesn't occur if the password block comes first. is there a reason as to why this is happening?
