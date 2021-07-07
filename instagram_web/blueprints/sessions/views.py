@@ -47,11 +47,11 @@ def create():
     #     flash("Sorry, we couldn't find an account with that username.", "error")
     #     return render_template('sessions/new.html')
 
-@sessions_blueprint.route('/profile')
+@sessions_blueprint.route('/landing')
 @login_required
 def index():
     # option 2: using flask-login
-    return render_template('sessions/profile.html', name=current_user.username)
+    return render_template('sessions/landing.html', name=current_user.username)
 
     # # option 1: manage sessions manually
     # if 'user_id' in session:
