@@ -5,10 +5,12 @@ from flask_login import login_user, login_required, current_user, logout_user
 
 sessions_blueprint = Blueprint('sessions', __name__, template_folder='templates')
 
+# load form to sign in
 @sessions_blueprint.route('/new', methods=['GET'])
 def new():
     return render_template('sessions/new.html')
 
+# create new session
 @sessions_blueprint.route('/', methods=['POST'])
 def create():
     # option 2: using flask-login
@@ -47,7 +49,8 @@ def create():
     #     flash("Sorry, we couldn't find an account with that username.", "error")
     #     return render_template('sessions/new.html')
 
-@sessions_blueprint.route('/landing')
+# show new session
+@sessions_blueprint.route('/')
 @login_required
 def index():
     # option 2: using flask-login
@@ -61,13 +64,19 @@ def index():
     #     flash("Not logged in", "error")
     #     return render_template('sessions/new.html')
 
-@sessions_blueprint.route('/')
+# logout from session
+@sessions_blueprint.route('/<id>/delete')
 @login_required
-def destroy():
+def destroy(id):
     # option 2: using flask-login
-    logout_user()
-    flash('Logout was successful. See you again soon!')
-    return redirect(url_for('sessions.new'))
+    user = User.get_by_id(id)
+    if user:
+        logout_user()
+        flash('Logout was successful. See you again soon!')
+        return redirect(url_for('sessions.new'))
+    else:
+        flash("Error occurred", "error")
+        return redirect(url_for('home'))
 
     # # option 1: manage sessions manually
     # session.pop('user_id', None)

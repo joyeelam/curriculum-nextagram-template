@@ -1,0 +1,31 @@
+{% extends "_layout.html" %}
+
+{% block content %}
+  <div class="jumbotron">
+    <div class="center-container">
+      <h1 class="lead">Edit Post</h1>
+      <div class="card">
+        <img src="{{image.image_url}}" alt="caption" class="edit-picture">
+        <div class="card-body">
+          {% if image.image_caption == None %}
+            <p class="card-text no-caption">&ldquo;Lorem ipsum dolor sit amet&rdquo;</p>
+          {% else %}
+            <p class="card-text">{{image.image_caption}}</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <br/>
+    <form action="{{url_for('posts.update', id=image.id)}}" method="POST">
+      <input type="hidden" name="csrf_token" value="{{csrf_token()}}"/>
+      <textarea name="caption" rows="3" class="form-control" placeholder="Tell us an amazing story about this post!"></textarea>
+      <br/>
+      <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
+    <br/>
+    <form action="{{url_for('posts.destroy', id=image.id)}}" method="POST">
+      <input type="hidden" name="csrf_token" value="{{csrf_token()}}"/>
+      <button type="submit" class="btn btn-danger">Delete</button>
+    </form>
+  </div>
+{% endblock %}

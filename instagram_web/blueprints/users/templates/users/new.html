@@ -7,9 +7,9 @@
 {% block content %}
   <div class="jumbotron">
     <div class="center-container">
-      <lottie-player src="https://assets3.lottiefiles.com/packages/lf20_hymrcjeq.json" background="transparent" speed="1" style="width: 250px; height: 250px;" loop autoplay></lottie-player>
-      <h1 class="lead">Welcome to Nextagram</h1>
-      <small class="text-muted">Where every picture tells a story, let us help you tell yours.</small>
+      <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_ziimbwkk.json" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></lottie-player>
+      <h1 class="lead">welcome to de:fine</h1>
+      <small class="text-muted">Where creators inspire and are inspired.</small>
     </div>
     <hr/>
     <form action="{{ url_for('users.create') }}" method="POST" class="needs-validation" novalidate>
@@ -42,7 +42,7 @@
           {% endif %}
         </ul>
       </div>
-      <button type="submit" class="btn btn-primary">Add User</button>
+      <button type="submit" class="btn btn-outline-secondary">Create Account</button>
       <small class="form-text text-muted">Already have an account? <a href="{{ url_for('sessions.new') }}">Sign in here.</a></small>
     </form>
   </div>

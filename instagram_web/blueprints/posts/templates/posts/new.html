@@ -1,0 +1,26 @@
+{% extends "_layout.html" %}
+
+{% block title %}
+  Create New Post |
+{% endblock %}
+
+{% block content %}
+  <div class="jumbotron">
+    <div class="center-container">
+      <h1 class="lead">Create New Post</h1>
+      <br/>
+      <div>
+        <img style="width:300px;height:300px;display:none;object-fit:cover;" alt="image-preview" id="preview">
+      </div>
+      <p class="no-caption">Preview</p>
+      <form action="{{url_for('posts.create', id=current_user.id)}}" method="POST" enctype="multipart/form-data" onchange="previewImage(event)">
+        <input type="hidden" name="csrf_token" value="{{csrf_token()}}"/>
+        <input class="form-control" type="file" name="image_file"/>
+        <br/>
+        <textarea class="form-control" name="caption" rows="4"></textarea>
+        <br/>
+        <button type="submit" class="btn btn-primary">Share</button>
+      </form>
+    </div>
+  </div>
+{% endblock %}

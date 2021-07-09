@@ -1,28 +1,35 @@
 <nav class = "navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="{{ url_for('home') }}"><i class="fas fa-signature"></i> Nextagram</a>
+  <a class="navbar-brand" href="{{ url_for('home') }}"><i class="fas fa-signature"></i></a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav ml-auto">
+    <ul class="navbar-nav ml-auto mb-2 mb-lg-0">
+      <form class="d-flex" action="{{url_for('users.search')}}" method="POST">
+        <input type="hidden" name="csrf_token" value="{{csrf_token()}}"/>
+        <input type="search" class="form-control me-2" placeholder="Search username..." aria-label="Search" name=username>
+        <button type="submit" class="btn btn-outline-secondary"><i class="fas fa-search"></i></button>
+      </form>
+      <li class="nav-item">
+        <a class="nav-link" href="{{url_for('users.index')}}">Explore</a>
+      </li>
       {% if not current_user.is_authenticated %}
         <li class="nav-item">
-          <a class="nav-link" href="{{ url_for('users.new') }}">Sign Up</a>
+          <a class="nav-link" href="{{url_for('users.new')}}">Sign Up</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{{ url_for('sessions.new') }}">Sign In</a>
+          <a class="nav-link" href="{{url_for('sessions.new')}}">Sign In</a>
         </li>
       {% endif %}
       {% if current_user.is_authenticated %}
         <li class="nav-item">
-          <a class="nav-link" href="{{ url_for('users.show', username=current_user.username) }}">My Profile</a>
+          <a class="nav-link" href="{{url_for('users.show', username=current_user.username)}}">My Profile</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{{ url_for('users.edit', id=current_user.id) }}">Edit Profile</a>
+          <a class="nav-link" href="{{url_for('users.edit', id=current_user.id)}}">Edit Profile</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{{ url_for('sessions.destroy') }}">Log Out</a>
+          <a class="nav-link" href="{{url_for('sessions.destroy', id=current_user.id)}}">Log Out</a>
         </li>
       {% endif %}
     </ul>

@@ -1,3 +1,29 @@
+---- to fix ----
+1. Add slide buttons to carousel
+2. Add cancel buttons on forms if user decides not to submit/make changes
+3. Streamline use of user vs current_user in templates/forms
+4. Clean up spacing and streamline use of single quotes/double quotes
+
+---- non-RESTFUL (to edit/modify) ----
+1. users.update - added "update" to differentiate with "upload"
+2. users.upload - added "upload" to differentiate with "update"
+3. users.show - used <username> instead of <id>
+4. users.search - used "search"
+5. posts.create
+
+Current Features:
+1. Create, edit and delete user profile
+    - change profile picture
+    - change username, email, password
+2. Log-in and log-out
+3. Upload posts with optional captions
+4. Edit posts
+    - add/edit caption
+    - option to delete post
+5. Explore page that shows posts from all users
+6. Search option to find users by username
+7. Users can set profile as private
+
 <!-- 6 July 2021 -->
 <!-- ---- features to add ----
 - validation for casing in username > only allow lower_case?
@@ -23,8 +49,3 @@ which refers to users/views.py line 49 - however, users.update works on its own,
 1. You might wanna first fix the logic error in the update first, because right now, it only loops through 1 key, then after that, you save and return, which ends the function, meaning the other keys don't get saved [fixed]
 2. This is a problem with the url that you have, both update and upload have the same url, so it went in the first one, ignoring your upload [fixed]
 - Try fixing these and see if the first problem persists -->
-
-<!-- 8 July 2021 -->
----- current issues ----
-- password is passed through validation when uploading profile image using users.upload even though the validation has specified "if self.password", this returns an error and doesn't allow the image url to be saved to the database
-- generate_password_hash in models/User/validate doesn't work if the password block (line 16 to line 25) comes after the username block and email block, this problem doesn't occur if the password block comes first. is there a reason as to why this is happening?

@@ -2,8 +2,10 @@ from app import app
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
-from models.user import User
 from instagram_web.util.helpers import upload_file_to_s3, allowed_file
+from models.user import User
+from models.image import Image
+from peewee import prefetch
 
 users_blueprint = Blueprint('users',
                             __name__,
@@ -39,7 +41,7 @@ def edit(id):
         flash("Uh oh! That wasn't your profile, we've retrieved your profile instead.", "error")
         return redirect(url_for('users.edit', id=current_user.id))
 
-# makes changes to user's information in database
+# record changes to user's information in database
 @users_blueprint.route('/<id>/update', methods=['POST'])
 @login_required
 def update(id):
@@ -53,6 +55,10 @@ def update(id):
         new_info['email'] = request.form['email']
     if request.form['password'] != "":
         new_info['password'] = request.form['password']
+    if request.form['account_access'] == "private":
+        new_info['private_account'] = True
+    if request.form['account_access'] == "public":
+        new_info['private_account'] = False
 
     if current_user == user:
         for key in new_info:
@@ -63,6 +69,7 @@ def update(id):
             flash("Profile successfully updated.")
             return redirect(url_for('users.show', username=current_user.username))
         else:
+            # print(user.errors)
             flash("Oh no, something went wrong. Please try again!", "error")
             return render_template("users/edit.html", errors=user.errors)
     else:
@@ -86,15 +93,50 @@ def upload(id):
             flash("Image uploaded successfully")
             return redirect(url_for('users.show', username=current_user.username))
         else:
-            print(user.errors)
+            # print(user.errors)
             flash("Error occurred", "error")
             return redirect(url_for('users.edit', id=current_user.id))
 
-@users_blueprint.route('/<username>', methods=["GET"])
+# delete user
+@users_blueprint.route('/<id>/delete', methods=['POST'])
 @login_required
-def show(username):
-    return render_template('users/show.html')
+def destroy(id):
+    user = User.get_by_id(id)
+    if user.id == current_user.id:
+        if user.delete_instance():
+            flash("We're sorry to see you go. Till the next time.")
+            return redirect(url_for('home'))
+        else:
+            flash("Oops, looks like we're not ready to let you go yet.")
+            return redirect(url_for('users.show', username=current_user.username))
+    else:
+        flash("Sneaky move! That wasn't your profile. Here's yours instead.")
+        return redirect(url_for('users.show', username=current_user.username))
 
+# show individual profile
+@users_blueprint.route('/<username>', methods=["GET"])
+def show(username):
+    user = User.get_or_none(User.username == username)
+    if user:
+        return render_template('users/show.html', user=user)
+    else:
+        flash("Couldn't locate that account", "error")
+        return redirect(url_for('home'))
+
+# show all profiles
 @users_blueprint.route('/', methods=["GET"])
 def index():
-    return "USERS"
+    users = User.select()
+    images = Image.select()
+    users_with_images = prefetch(users, images)
+    return render_template('users/index.html', users=users_with_images)
+
+# search function to pull up specific profile by username
+@users_blueprint.route('/search', methods=["POST"])
+def search():
+    user = User.get_or_none(User.username == request.form['username'].lower())
+    if user:
+        return redirect(url_for('users.show', username=user.username))
+    else:
+        flash("Couldn't locate that account", "error")
+        return redirect(url_for('home'))

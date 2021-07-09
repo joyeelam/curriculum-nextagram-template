@@ -1,14 +1,24 @@
 {% extends "_layout.html" %}
 
 {% block title %}
-  Homepage
+  Homepage |
 {% endblock %}
 
 {% block content %}
-  <!-- <h1>Homepage</h1> -->
-  <br/>
-  <div class="temp-container">
-    <h1 class="lead">Exciting things are coming soon!</h1>
-    <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_i5hvgk50.json" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></lottie-player>
-  </div>
+<div class="jumbotron center-container">
+  <h1 class="header-title">de:fine</h1>
+    <div class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img src="https://i.pinimg.com/originals/af/53/1e/af531ee3740bb3acac121ce12d4512a1.jpg" class="d-block w-100" style="height:400px; object-fit:cover;" alt="Featured artist this month is Frances Segismundo">
+        </div>
+        <div class="carousel-item">
+          <img src="https://media.timeout.com/images/105617861/image.jpg" class="d-block w-100" style="height:400px; object-fit:cover;" alt="Interview with Aisha Rosli">
+        </div>
+        <div class="carousel-item">
+          <img src="https://creative-capital.org/wp-content/uploads/post//AR-SocialPost-Sqaure-02-Black-1600x1200.png" class="d-block w-100" style="height:400px; object-fit:cover;" alt="Collaboration with ArtiestRelief to provide relief funds">
+        </div>
+      </div>
+    </div>
+</div>
 {% endblock %}

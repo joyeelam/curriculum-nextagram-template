@@ -1,8 +1,13 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
   background-color: #f2f2f2;
   padding-bottom: 15px;
   position: relative;
   min-height: 100vh;
+  min-width: 100vw;
 }
 
 footer {
@@ -27,12 +32,21 @@ footer a {
   padding-left: 0;
 }
 
+.navbar {
+  margin-bottom: 15px;
+}
+
 .navbar-brand {
   font-size: 1.3rem;
 }
 
 .jumbotron {
   background-color: inherit;
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
 }
 
 .center-container {
@@ -43,17 +57,33 @@ footer a {
   text-align: center;
 }
 
+.header-title {
+  font-family: 'Lobster Two', cursive;
+  font-size: 4rem;
+  padding-bottom: 20px;
+}
+
 .profile-image {
   border-radius: 50%;
-  width: 250px;
-  height: 250px;
+  height: 150px;
+  max-width: 100%;
   object-fit: cover;
 }
 
-.temp-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 80vh;
+.feed-picture {
+  height: 250px;
+  width: 100%;
+  object-fit: cover;
+  margin-bottom: 1.2rem!important;
+}
+
+.edit-picture {
+  height: 400px;
+  width: 100%;
+  object-fit: cover;
+}
+
+.no-caption {
+  color: #cccccc;
+  font-style: italic;
 }

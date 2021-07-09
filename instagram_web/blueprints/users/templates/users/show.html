@@ -1,20 +1,36 @@
 {% extends "_layout.html" %}
 
-{% block title %}
-  My Profile |
-{% endblock %}
-
 {% block content %}
   <div class="jumbotron center-container">
-    <h1 class="lead">Hi {{current_user.username}}</h1>
-    {% if current_user.profile_image == None %}
-      <img src="/static/images/default_avatar.png" class="profile-image" alt="profile">
+    <div class="center-container">
+      <h1 class="lead">{{user.username}}</h1>
+      <img src="{{user.profile_image}}" class="profile-image" alt="profile">
+      <br/>
+      {% if user.id == current_user.id %}
+        <a href="{{url_for('users.edit', id=current_user.id)}}" class="btn btn-outline-secondary btn-sm">Edit Profile</a>
+        <br/>
+        <a href="{{url_for('posts.new')}}" class="btn btn-outline-secondary btn-sm">Create New Post</a>
+      {% endif %}
+    </div>
+    <hr/>
+    {% if user.private_account and user.id != current_user.id %}
+      <h1 class="lead">This account is private.</h1>
+      <small>Follow this account to see their posts.</small>
+      <br/>
+      <button class="btn btn-sm btn-secondary" type="button">Request to Follow</button>
     {% else %}
-      <img src="{{current_user.profile_image}}" class="profile-image" alt="profile">
+      <div class="posts-container">
+        <div class="row">
+          {% for post in user.images %}
+          <div class="col-sm-4 mb-2">
+            <img src="{{post.image_url}}" class="feed-picture" alt="caption">
+            {% if user.id == current_user.id %}
+            <a href="{{url_for('posts.edit', id=post.id)}}" class='btn btn-outline-secondary'>Edit Post</a>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
     {% endif %}
-    <br/>
-    {% if current_user.is_authenticated %}
-      <a href="{{url_for('users.edit', id=current_user.id)}}" class="btn btn-outline-secondary btn-sm">Edit Profile</a>
   </div>
-  {% endif %}
 {% endblock %}
