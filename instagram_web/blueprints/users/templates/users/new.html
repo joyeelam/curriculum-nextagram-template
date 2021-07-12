@@ -43,6 +43,9 @@
         </ul>
       </div>
       <button type="submit" class="btn btn-outline-secondary">Create Account</button>
+      <a href="{{url_for('users.google_new')}}">
+        <button type="button" class="btn btn-outline-primary"><i class="fab fa-google"></i> Sign Up with Google</button>
+      </a>
       <small class="form-text text-muted">Already have an account? <a href="{{ url_for('sessions.new') }}">Sign in here.</a></small>
     </form>
   </div>

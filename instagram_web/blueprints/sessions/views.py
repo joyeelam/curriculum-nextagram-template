@@ -1,7 +1,8 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
-from models.user import User
-from werkzeug.security import check_password_hash
 from flask_login import login_user, login_required, current_user, logout_user
+from werkzeug.security import check_password_hash
+from instagram_web.util.google_oauth import oauth
+from models.user import User
 
 sessions_blueprint = Blueprint('sessions', __name__, template_folder='templates')
 
@@ -81,3 +82,23 @@ def destroy(id):
     # # option 1: manage sessions manually
     # session.pop('user_id', None)
     # return redirect(url_for('sessions.new'))
+
+# sign-in with google_oauth
+@sessions_blueprint.route('/google_login')
+def google_login():
+    redirect_uri = url_for('sessions.authorize', _external = True)
+    return oauth.google.authorize_redirect(redirect_uri)
+
+@sessions_blueprint.route('/authorize/google')
+def authorize():
+    oauth.google.authorize_access_token()
+    email = oauth.google.get('https://www.googleapis.com/oauth2/v2/userinfo').json()['email']
+    user = User.get_or_none(User.email == email)
+    if user:
+        remember = True if request.form.get('remember') else False
+        login_user(user, remember = remember)
+        flash("Welcome back! We've missed you.")
+        return redirect(url_for("sessions.index"))
+    else:
+        flash("Sorry, we couldn't find an account linked with your Google account.", 'error')
+        return redirect(url_for('users.new'))

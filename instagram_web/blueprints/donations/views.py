@@ -26,9 +26,5 @@ def create():
         if donation.save():
             flash("Thank you for your kind donation!")
             return redirect(url_for('users.index'))
-        else:
-            flash("Oh no, an error occurred", "error")
-            return render_template('posts/show.html', id=id)
-    else:
-        flash("Oh no, an error occurred", "error")
-        return render_template('posts/show.html', id=id)
+    flash("Oh no, an error occurred", "error")
+    return render_template('posts/show.html', id=id)

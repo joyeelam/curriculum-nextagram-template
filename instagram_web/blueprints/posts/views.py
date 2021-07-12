@@ -1,4 +1,5 @@
 from app import app
+from peewee import prefetch
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
 from instagram_web.util.helpers import upload_file_to_s3, allowed_file
@@ -96,3 +97,11 @@ def show(id):
     else:
         flash("Oh no, an error occurred.", "error")
         return redirect(url_for('users.index'))
+
+# view all public posts
+@posts_blueprint.route("/", methods=['GET'])
+def index():
+    users = User.select().where(User.private_account == False)
+    images = Image.select()
+    users_with_images = prefetch(users, images)
+    return render_template('posts/index.html', users=users_with_images)

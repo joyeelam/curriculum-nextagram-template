@@ -23,7 +23,9 @@
         <input required type="password" name="password" class="form-control">
       </div>
       <button type="submit" class="btn btn-outline-secondary">Sign In</button>
-      <button type="button" class="btn btn-outline-primary"><i class="fab fa-google"></i> Sign In with Google</button>
+      <a href="{{url_for('sessions.google_login')}}">
+        <button type="button" class="btn btn-outline-primary"><i class="fab fa-google"></i> Sign In with Google</button>
+      </a>
       <small class="form-text text-muted">Don't have an account yet? <a href="{{ url_for('users.new') }}">Sign up here.</a></small>
     </form>
   </div>

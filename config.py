@@ -16,6 +16,9 @@ class Config(object):
     PUBLIC_KEY = os.environ.get('PUBLIC_KEY')
     PRIVATE_KEY = os.environ.get('PRIVATE_KEY')
 
+    G_CLIENT_ID = os.environ.get("G_CLIENT_ID")
+    G_CLIENT_SECRET = os.environ.get("G_CLIENT_SECRET")
+
 class ProductionConfig(Config):
     DEBUG = False
     ASSETS_DEBUG = False

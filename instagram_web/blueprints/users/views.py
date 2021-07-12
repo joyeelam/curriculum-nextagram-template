@@ -1,12 +1,14 @@
 from app import app
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from flask_login import login_required, current_user
+from flask_login import login_user, login_required, current_user
 from werkzeug.utils import secure_filename
 from instagram_web.util.helpers import upload_file_to_s3, allowed_file
+from instagram_web.util.google_oauth import oauth
 from models.user import User
 from models.image import Image
 from models.donation import Donation
 from peewee import prefetch
+import rstr, random, string
 
 users_blueprint = Blueprint('users',
                             __name__,
@@ -133,7 +135,7 @@ def show(username):
         flash("Couldn't locate that account", "error")
         return redirect(url_for('home'))
 
-# show all public profiles
+# show all public profiles - currently not active/in-use
 @users_blueprint.route('/', methods=["GET"])
 def index():
     users = User.select().where(User.private_account == False)
@@ -150,3 +152,29 @@ def search():
     else:
         flash("Couldn't locate that account", "error")
         return redirect(url_for('home'))
+
+# create account with Google
+@users_blueprint.route('/new/google')
+def google_new():
+    redirect_uri = url_for('users.google_create', _external = True)
+    return oauth.google.authorize_redirect(redirect_uri)
+
+@users_blueprint.route('/authorize/google')
+def google_create():
+    oauth.google.authorize_access_token()
+    google_info = oauth.google.get('https://www.googleapis.com/oauth2/v2/userinfo').json()
+
+    random_digits = ''.join(random.sample(string.digits,5))
+
+    username = google_info['given_name'].lower() + random_digits
+    email = google_info['email']
+    password = rstr.xeger(r'[A-Za-z\d@$!%*?&]{6,}')
+    user = User(username=username, email=email, password=password)
+
+    if user.save():
+        login_user(user)
+        flash("Welcome back! We've missed you.")
+        return redirect(url_for("sessions.index"))
+    else:
+        flash("Oh no, something went wrong. Please try again!", "error")
+        return redirect(url_for('users.new'))
