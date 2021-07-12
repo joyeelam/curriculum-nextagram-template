@@ -5,6 +5,7 @@ from werkzeug.utils import secure_filename
 from instagram_web.util.helpers import upload_file_to_s3, allowed_file
 from models.user import User
 from models.image import Image
+from models.donation import Donation
 from peewee import prefetch
 
 users_blueprint = Blueprint('users',
@@ -73,7 +74,7 @@ def update(id):
             flash("Oh no, something went wrong. Please try again!", "error")
             return render_template("users/edit.html", errors=user.errors)
     else:
-        flash("Oh no, something went wrong. Please try again", "error")
+        flash("Oh no, something went wrong. Please try again!", "error")
         return redirect(url_for('users.edit', id=current_user.id))
 
 # upload profile picture via aws s3
@@ -90,11 +91,11 @@ def upload(id):
         # print(image_path)
         user.profile_image = image_path
         if user.save():
-            flash("Image uploaded successfully")
+            flash("Profile picture updated successfully.")
             return redirect(url_for('users.show', username=current_user.username))
         else:
             # print(user.errors)
-            flash("Error occurred", "error")
+            flash("Oh no, something went wrong. Please try again!", "error")
             return redirect(url_for('users.edit', id=current_user.id))
 
 # delete user
@@ -118,15 +119,24 @@ def destroy(id):
 def show(username):
     user = User.get_or_none(User.username == username)
     if user:
-        return render_template('users/show.html', user=user)
+        images = user.images
+        donations_list = []
+        for image in images:
+            donations = image.donations
+            for donation in donations:
+                # print(donation.amount)
+                donations_list.append(donation.amount)
+        # print(sum(donations_list))
+        total_donations = sum(donations_list)
+        return render_template('users/show.html', user=user, posts=images, donations=total_donations)
     else:
         flash("Couldn't locate that account", "error")
         return redirect(url_for('home'))
 
-# show all profiles
+# show all public profiles
 @users_blueprint.route('/', methods=["GET"])
 def index():
-    users = User.select()
+    users = User.select().where(User.private_account == False)
     images = Image.select()
     users_with_images = prefetch(users, images)
     return render_template('users/index.html', users=users_with_images)

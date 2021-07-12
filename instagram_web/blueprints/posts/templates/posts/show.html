@@ -1,0 +1,24 @@
+{% extends "_layout.html" %}
+
+{% block content %}
+  <div class="jumbotron center-container">
+    <img src="{{image.image_url}}" alt="{{image.image_caption}}" class="show-post">
+    <br>
+    {% if image.image_caption == None %}
+      <p class="no-caption">&ldquo;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.&rdquo;</p>
+    {% else %}
+      <p>&ldquo;{{image.image_caption}}&rdquo;</p>
+    {% endif %}
+    <small>created by</small>
+    <img class="tiny-profile" src="{{user.profile_image}}" alt="">
+    <small>{{user.username}}</small>
+    <br>
+    <a href="{{url_for('users.show', username=user.username)}}" class="btn btn-sm btn-outline-secondary">View Profile</a>
+    <br>
+    {% if current_user.is_authenticated %}
+      <button type="button" class="btn btn-sm btn-outline-success" data-toggle="modal" data-target="#add_user_modal" style="margin-bottom:10px;">Donate</button>
+      <small>Contribute to {{user.username}}'s coffee fund!</small>
+      {% include "donations/new.html" %}
+    {% endif %}
+  </div>
+{% endblock %}

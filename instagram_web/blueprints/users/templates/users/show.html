@@ -2,15 +2,35 @@
 
 {% block content %}
   <div class="jumbotron center-container">
-    <div class="center-container">
+    <div class="user-container">
       <h1 class="lead">{{user.username}}</h1>
       <img src="{{user.profile_image}}" class="profile-image" alt="profile">
       <br/>
       {% if user.id == current_user.id %}
-        <a href="{{url_for('users.edit', id=current_user.id)}}" class="btn btn-outline-secondary btn-sm">Edit Profile</a>
-        <br/>
-        <a href="{{url_for('posts.new')}}" class="btn btn-outline-secondary btn-sm">Create New Post</a>
+        <div class="btn-group" role="group">
+          <a href="{{url_for('users.edit', id=current_user.id)}}" class="btn btn-outline-secondary btn-sm">Edit Profile</a>
+          &nbsp
+          <a href="{{url_for('posts.new')}}" class="btn btn-outline-secondary btn-sm">Upload Post</a>
+        </div>
       {% endif %}
+      <br>
+      <div class="user-dashboard">
+        <div class="col">
+          <small>0</small>
+          <br>
+          <small>Followers</small>
+        </div>
+        <div class="col">
+          <small>USD {{donations}}</small>
+          <br>
+          <small>Donations</small>
+        </div>
+        <div class="col">
+          <small>{{posts.count()}}</small>
+          <br>
+          <small>Posts</small>
+        </div>
+      </div>
     </div>
     <hr/>
     {% if user.private_account and user.id != current_user.id %}
@@ -23,7 +43,9 @@
         <div class="row">
           {% for post in user.images %}
           <div class="col-sm-4 mb-2">
-            <img src="{{post.image_url}}" class="feed-picture" alt="caption">
+            <a href="{{url_for('posts.show', id=post.id)}}">
+              <img src="{{post.image_url}}" class="feed-picture" alt="caption">
+            </a>
             {% if user.id == current_user.id %}
             <a href="{{url_for('posts.edit', id=post.id)}}" class='btn btn-outline-secondary'>Edit Post</a>
             {% endif %}

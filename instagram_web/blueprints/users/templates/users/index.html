@@ -3,24 +3,24 @@
 {% block content %}
   <div class="container-fluid">
     {% for user in users %}
-      {% if user.private_account == False %}
-        <div class="row">
-          <div class="col-sm-2 mb-5 center-container">
-            <img src="{{user.profile_image}}" class="profile-image" alt="caption">
-            <p>{{user.username}}</p>
-            <a href="{{url_for('users.show', username=user.username)}}" class="btn btn-outline-secondary btn-sm">View Profile</a>
-          </div>
-          <div class="col">
-            <div class="row">
-              {% for post in user.images %}
-                <div class="col-sm-4 mb-2">
+      <div class="row">
+        <!-- <div class="col-sm-2 mb-5 center-container">
+          <img src="{{user.profile_image}}" class="profile-image" alt="caption">
+          <p>{{user.username}}</p>
+          <a href="{{url_for('users.show', username=user.username)}}" class="btn btn-outline-secondary btn-sm">View Profile</a>
+        </div> -->
+        <div class="col">
+          <div class="row">
+            {% for post in user.images %}
+              <div class="col-sm-4 mb-2">
+                <a href="{{url_for('posts.show', id=post.id)}}">
                   <img src="{{post.image_url}}" class="feed-picture" alt="caption">
-                </div>
-              {% endfor %}
-            </div>
+                </a>
+              </div>
+            {% endfor %}
           </div>
         </div>
-      {% endif %}
+      </div>
     {% endfor %}
   </div>
 {% endblock %}

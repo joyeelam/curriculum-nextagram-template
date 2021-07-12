@@ -21,6 +21,7 @@
       <textarea name="caption" rows="3" class="form-control" placeholder="Tell us an amazing story about this post!"></textarea>
       <br/>
       <button type="submit" class="btn btn-primary">Save Changes</button>
+      <a href="{{url_for('posts.show', id=image.id)}}" class="btn btn-outline-secondary">Cancel</a>
     </form>
     <br/>
     <form action="{{url_for('posts.destroy', id=image.id)}}" method="POST">

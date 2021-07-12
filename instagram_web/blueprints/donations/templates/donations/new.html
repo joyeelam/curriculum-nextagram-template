@@ -1,0 +1,41 @@
+<div class="modal fade" id="add_user_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content payment-modal">
+      <div class="modal-body">
+        <div class="center-container">
+          <lottie-player src="https://assets7.lottiefiles.com/packages/lf20_dkamovet.json"  background="transparent" speed="1" style="width: 200px; height: 200px;" loop autoplay></lottie-player>
+        </div>
+        <form id="donationForm" action="{{url_for('donations.create')}}" method="POST">
+          <input type="hidden" name="csrf_token" value="{{csrf_token()}}"/>
+          <input type="hidden" name="image_id" value="{{image.id}}">
+          <input type="hidden" name="nonce" id="nonce-field">
+          <select class="form-control" name="amount">
+            <option value=5>USD 5.00</option>
+            <option value="10">USD 10.00</option>
+            <option value="15">USD 15.00</option>
+          </select>
+          <div id="payment-container"></div>
+          <button type="submit" id="payment-button" class="btn btn-sm btn-success">Confirm Payment</button>
+          <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal" aria-label="Close">Cancel</button>
+        </form>
+
+        <script type="text/javascript">
+          const braintreeButton = document.getElementById("payment-button")
+          braintree.dropin.create({
+            container: document.getElementById("payment-container"),
+            authorization: "{{token}}"
+          }, (error, paymentForm)=>{
+            braintreeButton.onclick = () => {
+              event.preventDefault()
+              paymentForm.requestPaymentMethod((error, payload)=>{
+                // console.log(payload.nonce\
+                document.getElementById('nonce-field').value = payload.nonce
+                donationForm.submit()
+              })
+            }
+          })
+        </script>
+      </div>
+    </div>
+  </div>
+</div>

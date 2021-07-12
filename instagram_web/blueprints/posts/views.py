@@ -2,6 +2,7 @@ from app import app
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
 from instagram_web.util.helpers import upload_file_to_s3, allowed_file
+from instagram_web.util.payments import gateway
 from werkzeug.utils import secure_filename
 from models.user import User
 from models.image import Image
@@ -83,3 +84,15 @@ def destroy(id):
     else:
         flash("Oh no, an error occurred.", "error")
         return redirect(url_for('users.show', username=current_user.username))
+
+# view post
+@posts_blueprint.route('/<id>', methods=['GET'])
+def show(id):
+    image = Image.get_or_none(Image.id == id)
+    user = User.get_by_id(image.user_id)
+    token = gateway.client_token.generate()
+    if image:
+        return render_template("posts/show.html", image=image, user=user, token=token)
+    else:
+        flash("Oh no, an error occurred.", "error")
+        return redirect(url_for('users.index'))

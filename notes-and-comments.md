@@ -1,16 +1,3 @@
----- to fix ----
-1. Add slide buttons to carousel
-2. Add cancel buttons on forms if user decides not to submit/make changes
-3. Streamline use of user vs current_user in templates/forms
-4. Clean up spacing and streamline use of single quotes/double quotes
-
----- non-RESTFUL (to edit/modify) ----
-1. users.update - added "update" to differentiate with "upload"
-2. users.upload - added "upload" to differentiate with "update"
-3. users.show - used <username> instead of <id>
-4. users.search - used "search"
-5. posts.create
-
 Current Features:
 1. Create, edit and delete user profile
     - change profile picture
@@ -23,6 +10,28 @@ Current Features:
 5. Explore page that shows posts from all users
 6. Search option to find users by username
 7. Users can set profile as private
+8. Users can view posts individually
+9. Users can donate selected amount to posts
+10. Dashboard on user profiles - total donations, no. of posts, (to add followers count as well)
+
+Features to add:
+1. Mailgun API sending email
+
+---- to fix ----
+1. Add slide buttons to carousel
+2. Streamline use of user vs current_user in templates/forms
+3. Clean up spacing and streamline use of single quotes/double quotes
+4. Fix flash messages content
+5. Add proper alt attribute to img tags
+6. Rendering of posts - latest upload comes first
+7. Rendering of users.index - show by images, not users
+
+---- non-RESTFUL (to edit/modify) ----
+1. users.update - added "update" to differentiate with "upload"
+2. users.upload - added "upload" to differentiate with "update"
+3. users.show - used <username> instead of <id>
+4. users.search - used "search"
+5. posts.create
 
 <!-- 6 July 2021 -->
 <!-- ---- features to add ----
