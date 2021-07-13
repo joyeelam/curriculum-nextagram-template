@@ -11,12 +11,34 @@
           <a href="{{url_for('users.edit', id=current_user.id)}}" class="btn btn-outline-secondary btn-sm">Edit Profile</a>
           &nbsp
           <a href="{{url_for('posts.new')}}" class="btn btn-outline-secondary btn-sm">Upload Post</a>
+          {% if current_user.private_account %}
+            &nbsp
+            <a href="#" class="btn btn-sm btn-outline-secondary">
+              Follow Requests <span class="badge bg-light text-dark">0</span>
+            </a>
+          {% endif %}
         </div>
+      {% else %}
+      {% if not user.private_account %}
+          {% if not current_user in followers %}
+            <form action="{{url_for('followers.create')}}" method="POST">
+              <input type="hidden" name="csrf_token" value="{{csrf_token()}}"/>
+              <input type="hidden" name="creator" value="{{user.id}}">
+              <button type="submit" class="btn btn-sm btn-outline-secondary">Follow User</button>
+            </form>
+          {% else %}
+          <form action="{{url_for('followers.destroy', id=user.id)}}" method="POST">
+            <input type="hidden" name="csrf_token" value="{{csrf_token()}}"/>
+            <input type="hidden" name="creator" value="{{user.id}}">
+            <button type="submit" class="btn btn-sm btn-outline-secondary">Unfollow User</button>
+          </form>
+          {% endif %}
+        {% endif %}
       {% endif %}
       <br>
       <div class="user-dashboard">
         <div class="col">
-          <small>0</small>
+          <a href="{{url_for('followers.show', id=user.id)}}" style="color:inherit;"><small>{{followers.count()}}</small></a>
           <br>
           <small>Followers</small>
         </div>
@@ -37,7 +59,11 @@
       <h1 class="lead">This account is private.</h1>
       <small>Follow this account to see their posts.</small>
       <br/>
-      <button class="btn btn-sm btn-secondary" type="button">Request to Follow</button>
+      <form action="{{url_for('followers.new')}}" method="POST">
+        <input type="hidden" name="csrf_token" value="{{csrf_token()}}"/>
+        <input type="hidden" name="creator" value="{{user.id}}">
+        <button class="btn btn-sm btn-secondary" type="button">Request to Follow</button>
+      </form>
     {% else %}
       <div class="posts-container">
         <div class="row">

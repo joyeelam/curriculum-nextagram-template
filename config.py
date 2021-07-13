@@ -19,6 +19,8 @@ class Config(object):
     G_CLIENT_ID = os.environ.get("G_CLIENT_ID")
     G_CLIENT_SECRET = os.environ.get("G_CLIENT_SECRET")
 
+    MAILGUN_API_KEY = os.environ.get("MAILGUN_API_KEY")
+
 class ProductionConfig(Config):
     DEBUG = False
     ASSETS_DEBUG = False

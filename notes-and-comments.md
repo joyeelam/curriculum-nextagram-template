@@ -15,9 +15,15 @@ Current Features:
 8. Users can view posts individually
 9. Users can donate selected amount to posts
 10. Dashboard on user profiles - total donations, no. of posts, (to add followers count as well)
+11. Mailgun integrated to send both thank you email (sender) and notification email (creator) when new donation is recorded
+12. Users can follow/unfollow public users with button that toggles between follow/unfollow
 
 Features to add:
-1. Mailgun API sending email
+- In-app notifications ?
+- https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xxii-background-jobs
+- Allow users to request to follow private users, allow private users to accept/reject request
+- Allow users to delete followers
+- Show list of followers/following on user dashboard
 
 ---- to fix ----
 1. Add slide buttons to carousel
@@ -27,6 +33,7 @@ Features to add:
 5. Add proper alt attribute to img tags
 6. Rendering of posts - latest upload comes first
 7. Rendering of users.index - show by images, not users
+8. Change logic of creating account using Google, use last User.id + 1 to append to new user to ensure no repetition since each user's id will always be unique
 
 ---- non-RESTFUL (to edit/modify) ----
 1. users.update - added "update" to differentiate with "upload"
@@ -37,7 +44,7 @@ Features to add:
 
 12 July 2021 (to review & fix)
 1. donations/views.py
-	- Line 29, 32
+	- Line 29, 32 [modified]
 		- Since these two lines are actually identical, you can skip the one on line 29, and remove the else on line 32, that way both conditions will lead to "post/show.html" on error
 2. users/views.py
 	- Line 123

@@ -1,0 +1,26 @@
+{% extends "_layout.html" %}
+
+{% block content %}
+  <div class="container-fluid">
+    <div class="center-container">
+      <img src="{{user.profile_image}}" class="profile-image" alt="profile">
+      <br>
+      <h1 class="lead">{{user.username}}'s followers</h1>
+      <a href="{{url_for('users.show', username=user.username)}}" class="btn btn-sm btn-outline-secondary">Back to {{user.username}}'s profile</a>
+    </div>
+    <hr>
+    <div class="row">
+      {% for follower in followers %}
+        <div class="col">
+          <div class="center-container">
+            <a href="{{url_for('users.show', username=follower.username)}}">
+              <img src="{{follower.profile_image}}" class="profile-image" alt="profile">
+            </a>
+            <br>
+            <small>{{follower.username}}</small>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}

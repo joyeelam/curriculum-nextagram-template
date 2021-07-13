@@ -7,6 +7,7 @@ from instagram_web.util.payments import gateway
 from werkzeug.utils import secure_filename
 from models.user import User
 from models.image import Image
+from models.follow import Follow
 
 posts_blueprint = Blueprint('posts', __name__, template_folder='templates')
 
@@ -105,3 +106,14 @@ def index():
     images = Image.select()
     users_with_images = prefetch(users, images)
     return render_template('posts/index.html', users=users_with_images)
+
+# view posts from followed users
+@posts_blueprint.route("/feed")
+def feed():
+    user = User.get_or_none(User.id == current_user.id)
+    creators = (
+                    User.select()
+                        .join(Follow, on=Follow.creator_id == User.id)
+                        .where(Follow.follower == user)
+                )
+    return render_template('posts/feed.html', creators=creators)

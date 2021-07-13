@@ -28,7 +28,9 @@ pycodestyle==2.5.0
 pycparser==2.20
 python-dateutil==2.8.1
 python-dotenv==0.10.1
+redis==3.5.3
 requests==2.25.1
+rq==1.9.0
 rstr==2.2.6
 s3transfer==0.4.2
 six==1.12.0

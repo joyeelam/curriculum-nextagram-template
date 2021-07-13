@@ -2,20 +2,21 @@ from app import app
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_user, login_required, current_user
 from werkzeug.utils import secure_filename
+from peewee import prefetch
+import rstr, random, string
 from instagram_web.util.helpers import upload_file_to_s3, allowed_file
 from instagram_web.util.google_oauth import oauth
 from models.user import User
 from models.image import Image
 from models.donation import Donation
-from peewee import prefetch
-import rstr, random, string
+from models.follow import Follow
 
 users_blueprint = Blueprint('users',
                             __name__,
                             template_folder='templates')
 
 # load form to create new user
-@users_blueprint.route('/new', methods=['GET'])
+@users_blueprint.route('/new')
 def new():
     return render_template('users/new.html')
 
@@ -120,28 +121,21 @@ def destroy(id):
 @users_blueprint.route('/<username>', methods=["GET"])
 def show(username):
     user = User.get_or_none(User.username == username)
+    followers = (User.select().join(Follow, on=Follow.follower_id == User.id).where(Follow.creator == user))
     if user:
-        images = user.images
+        images = Image.select().where(Image.user_id == user.id)
+        donations = Donation.select()
+        images_with_donations = prefetch(images, donations)
         donations_list = []
-        for image in images:
-            donations = image.donations
-            for donation in donations:
-                # print(donation.amount)
-                donations_list.append(donation.amount)
-        # print(sum(donations_list))
+        for image in images_with_donations:
+            donation = image.donations
+            for d in donation:
+                donations_list.append(round(d.amount))
         total_donations = sum(donations_list)
-        return render_template('users/show.html', user=user, posts=images, donations=total_donations)
+        return render_template('users/show.html', user=user, posts=images, donations=total_donations, followers=followers)
     else:
         flash("Couldn't locate that account", "error")
         return redirect(url_for('home'))
-
-# show all public profiles - currently not active/in-use
-@users_blueprint.route('/', methods=["GET"])
-def index():
-    users = User.select().where(User.private_account == False)
-    images = Image.select()
-    users_with_images = prefetch(users, images)
-    return render_template('users/index.html', users=users_with_images)
 
 # search function to pull up specific profile by username
 @users_blueprint.route('/search', methods=["POST"])

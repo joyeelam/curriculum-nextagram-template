@@ -2,11 +2,11 @@
 
 {% block content %}
   <div class="container-fluid">
-    {% for user in users %}
+    {% for creator in creators %}
       <div class="row">
         <div class="col">
           <div class="row">
-            {% for post in user.images %}
+            {% for post in creator.images %}
               <div class="col-sm-4 mb-2">
                 <a href="{{url_for('posts.show', id=post.id)}}">
                   <img src="{{post.image_url}}" class="feed-picture" alt="caption">
