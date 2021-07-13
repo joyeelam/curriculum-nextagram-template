@@ -1,0 +1,31 @@
+{% extends "_layout.html" %}
+
+{% block content %}
+  <div class="container-fluid">
+    <div class="center-container">
+      <img src="{{user.profile_image}}" class="profile-image" alt="profile">
+      <br>
+      <h1 class="lead">Follower requests</h1>
+      <a href="{{url_for('users.show', username=user.username)}}" class="btn btn-sm btn-outline-secondary">Go Back</a>
+    </div>
+    <hr>
+      <ul>
+        {% for follower in followers %}
+          <li style="list-style-type: none;">
+            <form action="{{url_for('followers.update', id=follower.id)}}" method="POST">
+              <a href="{{url_for('users.show', username=follower.username)}}">
+                <img src="{{follower.profile_image}}" class="tiny-profile" alt="profile">
+              </a>
+              <small>{{follower.username}}</small>
+              <input type="hidden" name="csrf_token" value="{{csrf_token()}}"/>
+              <input type="hidden" name="follower" value="{{follower.id}}"/>
+              <button type="submit" class="btn btn-sm btn-outline-success">Approve</button>
+              <a href="{{url_for('followers.delete', id=follower.id)}}">
+                <button type="button" class="btn btn-sm btn-outline-secondary">Reject</button>
+              </a>
+            </form>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+{% endblock %}

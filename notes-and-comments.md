@@ -17,12 +17,12 @@ Current Features:
 10. Dashboard on user profiles - total donations, no. of posts, (to add followers count as well)
 11. Mailgun integrated to send both thank you email (sender) and notification email (creator) when new donation is recorded
 12. Users can follow/unfollow public users with button that toggles between follow/unfollow
+13. Users can request to follow private users
+14. Private users can choose to accept/reject follower requests
 
 Features to add:
 - In-app notifications ?
 - https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xxii-background-jobs
-- Allow users to request to follow private users, allow private users to accept/reject request
-- Allow users to delete followers
 - Show list of followers/following on user dashboard
 
 ---- to fix ----
@@ -34,6 +34,7 @@ Features to add:
 6. Rendering of posts - latest upload comes first
 7. Rendering of users.index - show by images, not users
 8. Change logic of creating account using Google, use last User.id + 1 to append to new user to ensure no repetition since each user's id will always be unique
+9. Move follow requests and followers lists into a modal for better presentation
 
 ---- non-RESTFUL (to edit/modify) ----
 1. users.update - added "update" to differentiate with "upload"
@@ -47,7 +48,7 @@ Features to add:
 	- Line 29, 32 [modified]
 		- Since these two lines are actually identical, you can skip the one on line 29, and remove the else on line 32, that way both conditions will lead to "post/show.html" on error
 2. users/views.py
-	- Line 123
+	- Line 123 
 		- This part can be done by using list comprehension to shorten code, e.g.
 		sum([d.amount for d in [d for d in i.donations]])
 		- Theres also n + 1 happening here, for each image, get donations use prefetch here to prevent that, you can prefetch more than two things, https://docs.peewee-orm.com/en/latest/peewee/api.html?highlight=prefetch#prefetch

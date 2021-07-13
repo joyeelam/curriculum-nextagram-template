@@ -24,13 +24,19 @@ def create():
     creator = User.get_or_none(User.id == request.form['creator'])
     follower = User.get_or_none(User.id == current_user.id)
     if creator and follower:
-        follow = Follow(creator=creator, follower=follower)
-        if follow.save():
-            flash("User successfully followed")
-            return redirect(url_for('users.show', username=creator.username))
+        if creator.private_account:
+            follow = Follow(creator=creator, follower=follower)
+            if follow.save():
+                flash("Follow request submitted successfully")
+                return redirect(url_for('users.show', username=creator.username))
         else:
-            flash("Oh no, an error occurred", "error")
-            return redirect(url_for('users.show', username=creator.username))
+            follow = Follow(creator=creator, follower=follower, approval_status=True)
+            if follow.save():
+                flash("User successfully followed")
+                return redirect(url_for('users.show', username=creator.username))
+            else:
+                flash("Oh no, an error occurred", "error")
+                return redirect(url_for('users.show', username=creator.username))
 
 # unfollow user
 @followers_blueprint.route('/<id>/delete', methods=['POST'])
@@ -45,10 +51,39 @@ def destroy(id):
         flash("Oh no, an error occurred", "error")
         return redirect(url_for('users.show', username=creator.username))
 
-# create follow request
-@followers_blueprint.route('/new')
+# load form for follower requests pending approval
+@followers_blueprint.route('/<id>/edit')
 @login_required
-def new():
-    creator = User.get_or_none(User.id == request.form['creator'])
-    follower = User.get_or_none(User.id == current_user.id)
-    follow_requests = []
+def edit(id):
+    user = User.get_or_none(User.id == id)
+    followers = (
+                    User.select()
+                        .join(Follow, on=Follow.follower_id == User.id)
+                        .where((Follow.creator == user) & (Follow.approval_status == False))
+                )
+    return render_template('followers/edit.html', user=user, followers=followers)
+
+# approve follower requests
+@followers_blueprint.route('/<id>', methods=['POST'])
+@login_required
+def update(id):
+    follow_request = Follow.get_or_none(Follow.follower_id == id)
+    if follow_request:
+        follow_request.approval_status = True
+        if follow_request.save():
+            flash("Follower request approved")
+            return redirect(url_for('followers.edit', id=current_user.id))
+    flash("Oh no, an error occurred", "error")
+    return redirect(url_for('users.show', username=current_user.username))
+
+# reject follower requests
+@followers_blueprint.route('/<id>/delete')
+@login_required
+def delete(id):
+    follow_request = Follow.get_or_none(Follow.follower_id == id)
+    if follow_request:
+        if follow_request.delete_instance():
+            flash("Follower request rejected")
+            return redirect(url_for('followers.edit', id=current_user.id))
+    flash("Oh no, an error occurred", "error")
+    return redirect(url_for('users.show', username=current_user.username))

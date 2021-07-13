@@ -3,19 +3,28 @@
 {% block content %}
   <div class="container-fluid">
     {% for creator in creators %}
-      <div class="row">
-        <div class="col">
-          <div class="row">
-            {% for post in creator.images %}
-              <div class="col-sm-4 mb-2">
-                <a href="{{url_for('posts.show', id=post.id)}}">
-                  <img src="{{post.image_url}}" class="feed-picture" alt="caption">
-                </a>
-              </div>
-            {% endfor %}
+      {% if creator %}
+        <div class="row">
+          <div class="col">
+            <div class="row">
+              {% for post in creator.images %}
+                <div class="col-sm-4 mb-2">
+                  <a href="{{url_for('posts.show', id=post.id)}}">
+                    <img src="{{post.image_url}}" class="feed-picture" alt="caption">
+                  </a>
+                </div>
+              {% endfor %}
+            </div>
           </div>
         </div>
-      </div>
+      {% endif %}
     {% endfor %}
   </div>
 {% endblock %}
+
+<!-- to show if there are user is not following anyone -->
+<!-- <div class="jumbotron">
+  <lottie-player src="https://assets3.lottiefiles.com/packages/lf20_bjiyivdc.json" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></lottie-player>
+  <small class="lead">start following some users to view their posts!</small>
+  <a href="{{url_for('posts.index')}}" class="btn btn-sm btn-secondary">Explore</a>
+</div> -->
