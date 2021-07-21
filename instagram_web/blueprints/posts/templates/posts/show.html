@@ -15,7 +15,7 @@
     <br>
     <a href="{{url_for('users.show', username=user.username)}}" class="btn btn-sm btn-outline-secondary">View Profile</a>
     <br>
-    {% if current_user.is_authenticated %}
+    {% if current_user.is_authenticated and current_user != user %}
       <button type="button" class="btn btn-sm btn-outline-success" data-toggle="modal" data-target="#donation_modal" style="margin-bottom:10px;">Donate</button>
       <small>Contribute to {{user.username}}'s coffee fund!</small>
       {% include "donations/new.html" %}

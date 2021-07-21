@@ -7,15 +7,24 @@ followers_blueprint = Blueprint('followers', __name__, template_folder='template
 
 # show all followers
 @followers_blueprint.route('/<id>')
-@login_required
 def show(id):
     user = User.get_or_none(User.id == id)
     followers = (
                     User.select()
-                        .join(Follow, on=Follow.follower_id == User.id)
-                        .where(Follow.creator == user)
+                        .join(Follow, on = Follow.follower_id == User.id)
+                        .where((Follow.creator == user) & (Follow.approval_status == True))
                 )
-    return render_template('followers/index.html', user=user, followers=followers)
+    return render_template('followers/show.html', user=user, followers=followers)
+
+@followers_blueprint.route('/<id>/following')
+def index(id):
+    user = User.get_or_none(User.id == id)
+    following = (
+                    User.select()
+                        .join(Follow, on = Follow.creator_id == User.id)
+                        .where((Follow.follower == user) & (Follow.approval_status == True))
+                )
+    return render_template('followers/index.html', user=user, following=following)
 
 # follow user
 @followers_blueprint.route('/', methods=['POST'])
@@ -43,7 +52,8 @@ def create():
 @login_required
 def destroy(id):
     creator = User.get_or_none(User.id == id)
-    follow = Follow.get_or_none(Follow.creator_id == id)
+    follower = User.get_or_none(User.id == current_user.id)
+    follow = Follow.get_or_none(Follow.creator_id == creator.id and Follow.follower_id == follower.id)
     if follow.delete_instance():
         flash("Unfollow was successful")
         return redirect(url_for('users.show', username=creator.username))
@@ -66,7 +76,7 @@ def edit(id):
 # approve follower requests
 @followers_blueprint.route('/<id>', methods=['POST'])
 @login_required
-def update(id):
+def approve(id):
     follow_request = Follow.get_or_none(Follow.follower_id == id)
     if follow_request:
         follow_request.approval_status = True
@@ -77,9 +87,9 @@ def update(id):
     return redirect(url_for('users.show', username=current_user.username))
 
 # reject follower requests
-@followers_blueprint.route('/<id>/delete')
+@followers_blueprint.route('/<id>/reject', methods=['POST'])
 @login_required
-def delete(id):
+def reject(id):
     follow_request = Follow.get_or_none(Follow.follower_id == id)
     if follow_request:
         if follow_request.delete_instance():

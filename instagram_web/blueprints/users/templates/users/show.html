@@ -2,11 +2,39 @@
 
 {% block content %}
   <div class="jumbotron center-container">
+    <!-- user profile container -->
     <div class="user-container">
       <h1 class="lead">{{user.username}}</h1>
-      <img src="{{user.profile_image}}" class="profile-image" alt="profile">
-      <br/>
-      {% if user.id == current_user.id %}
+      <img src="{{user.profile_image}}" class="profile-image" alt="profile"/>
+    </div>
+    <br>
+    <!-- user dashboard container -->
+    <div class="user-dashboard">
+      <div class="col">
+        <a href="{{url_for('followers.show', id=user.id)}}" style="color:inherit;"><small>{{followers.count()}}</small></a>
+        <br>
+        <small>Followers</small>
+      </div>
+      <div class="col">
+        <a href="{{url_for('followers.index', id=user.id)}}" style="color:inherit;"><small>{{following.count()}}</small></a>
+        <br>
+        <small>Following</small>
+      </div>
+      <div class="col">
+        <small>USD {{donations}}</small>
+        <br>
+        <small>Donations</small>
+      </div>
+      <div class="col">
+        <small>{{posts.count()}}</small>
+        <br>
+        <small>Posts</small>
+      </div>
+    </div>
+    <!-- user actions container -->
+    <br/>
+    <div class="user-actions">
+      {% if user.id == current_user.id and current_user.is_authenticated %}
         <div class="btn-group" role="group">
           <a href="{{url_for('users.edit', id=current_user.id)}}">
             <button class="btn btn-outline-secondary btn-sm">Edit Profile</button>
@@ -24,67 +52,49 @@
             </a>
           {% endif %}
         </div>
-      {% else %}
-      {% if not user.private_account %}
-          {% if not current_user in followers %}
-            <form action="{{url_for('followers.create')}}" method="POST">
-              <input type="hidden" name="csrf_token" value="{{csrf_token()}}"/>
-              <input type="hidden" name="creator" value="{{user.id}}">
-              <button type="submit" class="btn btn-sm btn-outline-secondary">Follow User</button>
-            </form>
-          {% else %}
-          <form action="{{url_for('followers.destroy', id=user.id)}}" method="POST">
-            <input type="hidden" name="csrf_token" value="{{csrf_token()}}"/>
-            <input type="hidden" name="creator" value="{{user.id}}">
-            <button type="submit" class="btn btn-sm btn-outline-secondary">Unfollow User</button>
-          </form>
-          {% endif %}
-        {% endif %}
       {% endif %}
-      <br>
-      <div class="user-dashboard">
-        <div class="col">
-          <a href="{{url_for('followers.show', id=user.id)}}" style="color:inherit;"><small>{{followers.count()}}</small></a>
-          <br>
-          <small>Followers</small>
-        </div>
-        <div class="col">
-          <small>USD {{donations}}</small>
-          <br>
-          <small>Donations</small>
-        </div>
-        <div class="col">
-          <small>{{posts.count()}}</small>
-          <br>
-          <small>Posts</small>
-        </div>
-      </div>
     </div>
-    <hr/>
-    {% if user.private_account and user.id != current_user.id %}
-      <h1 class="lead">This account is private.</h1>
-      <small>Follow this account to see their posts.</small>
-      <br/>
-      <form action="{{url_for('followers.create')}}" method="POST">
-        <input type="hidden" name="csrf_token" value="{{csrf_token()}}"/>
-        <input type="hidden" name="creator" value="{{user.id}}">
-        <button class="btn btn-sm btn-secondary" type="submit">Request to Follow</button>
-      </form>
-    {% else %}
-      <div class="posts-container">
-        <div class="row">
-          {% for post in user.images %}
-          <div class="col-sm-4 mb-2">
-            <a href="{{url_for('posts.show', id=post.id)}}">
-              <img src="{{post.image_url}}" class="feed-picture" alt="caption">
-            </a>
-            {% if user.id == current_user.id %}
-            <a href="{{url_for('posts.edit', id=post.id)}}" class='btn btn-outline-secondary'>Edit Post</a>
-            {% endif %}
+    <!-- follow/unfollow button -->
+    <div class="follow-button">
+      {% if current_user in requests %}
+        <button class="btn btn-sm btn-secondary" disabled>Request pending approval</button>
+      {% elif user.id != current_user.id and not current_user in followers %}
+        <form action="{{url_for('followers.create')}}" method="POST">
+          <input type="hidden" name="csrf_token" value="{{csrf_token()}}"/>
+          <input type="hidden" name="creator" value="{{user.id}}">
+          <button type="submit" class="btn btn-sm btn-outline-secondary">Follow User</button>
+        </form>
+      {% elif user.id != current_user.id and current_user in followers %}
+        <form action="{{url_for('followers.destroy', id=user.id)}}" method="POST">
+          <input type="hidden" name="csrf_token" value="{{csrf_token()}}"/>
+          <input type="hidden" name="creator" value="{{user.id}}">
+          <button type="submit" class="btn btn-sm btn-outline-secondary">Unfollow User</button>
+        </form>
+      {% endif %}
+    </div>
+    <!-- main content -->
+    <div class="main-container">
+      {% if user.private_account and user.id != current_user.id and not current_user in followers %}
+        <br/>
+        <h1 class="lead">This account is private.</h1>
+        <small>Follow this account to see their posts.</small>
+      {% else %}
+      <hr/>
+        <div class="posts-container">
+          <div class="row">
+            {% for post in user.images %}
+            <div class="col-sm-4 mb-2">
+              <a href="{{url_for('posts.show', id=post.id)}}">
+                <img src="{{post.image_url}}" class="feed-picture" alt="caption">
+              </a>
+              {% if user.id == current_user.id %}
+              <a href="{{url_for('posts.edit', id=post.id)}}" class='btn btn-outline-secondary'>Edit Post</a>
+              {% endif %}
+            </div>
+            {% endfor %}
           </div>
-          {% endfor %}
         </div>
-      </div>
-    {% endif %}
+      {% endif %}
+    </div>
   </div>
 {% endblock %}

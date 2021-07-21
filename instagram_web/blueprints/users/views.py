@@ -123,6 +123,7 @@ def show(username):
     user = User.get_or_none(User.username == username)
     followers = (User.select().join(Follow, on=Follow.follower_id == User.id).where((Follow.creator == user) & (Follow.approval_status == True)))
     requests = (User.select().join(Follow, on=Follow.follower_id == User.id).where((Follow.creator == user) & (Follow.approval_status == False)))
+    following = (User.select().join(Follow, on=Follow.follower_id == User.id).where((Follow.follower == user) & (Follow.approval_status == True)))
     if user:
         images = Image.select().where(Image.user_id == user.id)
         donations = Donation.select()
@@ -133,7 +134,7 @@ def show(username):
             for d in donation:
                 donations_list.append(round(d.amount))
         total_donations = sum(donations_list)
-        return render_template('users/show.html', user=user, posts=images, donations=total_donations, followers=followers, requests=requests)
+        return render_template('users/show.html', user=user, posts=images, donations=total_donations, followers=followers, requests=requests, following=following)
     else:
         flash("Couldn't locate that account", "error")
         return redirect(url_for('home'))

@@ -2,20 +2,14 @@
 
 {% block content %}
   <div class="container-fluid">
-    {% for user in users %}
-      <div class="row">
-        <div class="col">
-          <div class="row">
-            {% for post in user.images %}
-              <div class="col-sm-4 mb-2">
-                <a href="{{url_for('posts.show', id=post.id)}}">
-                  <img src="{{post.image_url}}" class="feed-picture" alt="caption">
-                </a>
-              </div>
-            {% endfor %}
-          </div>
+    <div class="row">
+      {% for image in images %}
+        <div class="col-sm-4 mb-2">
+          <a href="{{url_for('posts.show', id=image.id)}}">
+            <img src="{{image.image_url}}" class="feed-picture" alt="caption">
+          </a>
         </div>
-      </div>
-    {% endfor %}
+      {% endfor %}
+    </div>
   </div>
 {% endblock %}

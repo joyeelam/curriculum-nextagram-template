@@ -1,30 +1,24 @@
 {% extends "_layout.html" %}
 
 {% block content %}
-  <div class="container-fluid">
-    {% for creator in creators %}
-      {% if creator %}
-        <div class="row">
-          <div class="col">
-            <div class="row">
-              {% for post in creator.images %}
-                <div class="col-sm-4 mb-2">
-                  <a href="{{url_for('posts.show', id=post.id)}}">
-                    <img src="{{post.image_url}}" class="feed-picture" alt="caption">
-                  </a>
-                </div>
-              {% endfor %}
-            </div>
+  {% if images %}
+    <div class="container-fluid">
+      <div class="row">
+        {% for image in images %}
+          <div class="col-sm-4 mb-2">
+            <a href="{{url_for('posts.show', id=image.id)}}">
+              <img src="{{image.image_url}}" class="feed-picture" alt="caption">
+            </a>
           </div>
-        </div>
-      {% endif %}
-    {% endfor %}
+        {% endfor %}
+      </div>
+    </div>
+  {% else %}
+  <div class="jumbotron center-container">
+    <lottie-player src="https://assets3.lottiefiles.com/packages/lf20_bjiyivdc.json" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></lottie-player>
+    <br>
+    <p class="text-muted">Start following some users to view their posts!</p>
+    <a href="{{url_for('posts.index')}}" class="btn btn-sm btn-secondary">Explore</a>
   </div>
+  {% endif %}
 {% endblock %}
-
-<!-- to show if there are user is not following anyone -->
-<!-- <div class="jumbotron">
-  <lottie-player src="https://assets3.lottiefiles.com/packages/lf20_bjiyivdc.json" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></lottie-player>
-  <small class="lead">start following some users to view their posts!</small>
-  <a href="{{url_for('posts.index')}}" class="btn btn-sm btn-secondary">Explore</a>
-</div> -->

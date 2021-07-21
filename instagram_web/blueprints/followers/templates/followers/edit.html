@@ -9,23 +9,31 @@
       <a href="{{url_for('users.show', username=user.username)}}" class="btn btn-sm btn-outline-secondary">Go Back</a>
     </div>
     <hr>
-      <ul>
+      <div class="row">
         {% for follower in followers %}
-          <li style="list-style-type: none;">
-            <form action="{{url_for('followers.update', id=follower.id)}}" method="POST">
-              <a href="{{url_for('users.show', username=follower.username)}}">
-                <img src="{{follower.profile_image}}" class="tiny-profile" alt="profile">
-              </a>
-              <small>{{follower.username}}</small>
+          <div class="span6">
+            <a href="{{url_for('users.show', username=follower.username)}}">
+              <img src="{{follower.profile_image}}" class="tiny-profile" alt="profile">
+            </a>
+            <small>{{follower.username}}</small>
+          </div>
+          &nbsp
+          <div class="span6 center-container">
+            <form action="{{url_for('followers.approve', id=follower.id)}}" method="POST">
               <input type="hidden" name="csrf_token" value="{{csrf_token()}}"/>
               <input type="hidden" name="follower" value="{{follower.id}}"/>
               <button type="submit" class="btn btn-sm btn-outline-success">Approve</button>
-              <a href="{{url_for('followers.delete', id=follower.id)}}">
-                <button type="button" class="btn btn-sm btn-outline-secondary">Reject</button>
-              </a>
             </form>
-          </li>
+          </div>
+          &nbsp
+          <div class="span6 center-container">
+            <form action="{{url_for('followers.reject', id=follower.id)}}" method="POST">
+              <input type="hidden" name="csrf_token" value="{{csrf_token()}}"/>
+              <input type="hidden" name="follower" value="{{follower.id}}"/>
+              <button type="submit" class="btn btn-sm btn-outline-secondary">Reject</button>
+            </form>
+          </div>
         {% endfor %}
-      </ul>
+      </div>
     </div>
 {% endblock %}

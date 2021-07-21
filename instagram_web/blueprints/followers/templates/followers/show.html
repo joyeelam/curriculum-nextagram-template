@@ -5,19 +5,19 @@
     <div class="center-container">
       <img src="{{user.profile_image}}" class="profile-image" alt="profile">
       <br>
-      <h1 class="lead">{{user.username}}'s follows</h1>
+      <h1 class="lead">{{user.username}}'s followers</h1>
       <a href="{{url_for('users.show', username=user.username)}}" class="btn btn-sm btn-outline-secondary">Back to {{user.username}}'s profile</a>
     </div>
     <hr>
     <div class="row">
-      {% for follow in following %}
+      {% for follower in followers %}
         <div class="col">
           <div class="center-container">
-            <a href="{{url_for('users.show', username=follow.username)}}">
-              <img src="{{follow.profile_image}}" class="profile-image" alt="profile">
+            <a href="{{url_for('users.show', username=follower.username)}}">
+              <img src="{{follower.profile_image}}" class="profile-image" alt="profile">
             </a>
             <br>
-            <small>{{follow.username}}</small>
+            <small>{{follower.username}}</small>
           </div>
         </div>
       {% endfor %}

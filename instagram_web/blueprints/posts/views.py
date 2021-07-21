@@ -23,7 +23,7 @@ def new():
 def create(id):
     user = User.get_by_id(id)
     file = request.files['image_file']
-    caption=request.form['caption']
+    caption = request.form['caption']
 
     if caption:
         caption = request.form['caption']
@@ -103,17 +103,26 @@ def show(id):
 @posts_blueprint.route("/", methods=['GET'])
 def index():
     users = User.select().where(User.private_account == False)
-    images = Image.select()
-    users_with_images = prefetch(users, images)
-    return render_template('posts/index.html', users=users_with_images)
+    images = (
+                Image.select()
+                    .join(User, on = User.id == Image.user_id)
+                    .where(User.private_account == False)
+                    .order_by(Image.created_at.desc())
+                    .prefetch(users)
+            )
+    return render_template('posts/index.html', images=images)
 
 # view posts from followed users
 @posts_blueprint.route("/feed")
 def feed():
     user = User.get_or_none(User.id == current_user.id)
-    creators = (
-                    User.select()
-                        .join(Follow, on=Follow.creator_id == User.id)
-                        .where(Follow.follower == user)
-                )
-    return render_template('posts/feed.html', creators=creators)
+    users = User.select()
+    images = (
+                Image.select()
+                    .join(User, on = User.id == Image.user_id)
+                    .join(Follow, on = Follow.creator_id == Image.user_id)
+                    .where((Follow.follower == user) & (Follow.approval_status == True))
+                    .order_by(Image.created_at.desc())
+                    .prefetch(users)
+            )
+    return render_template('posts/feed.html', images=images)

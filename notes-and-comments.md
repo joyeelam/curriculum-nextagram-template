@@ -19,11 +19,13 @@ Current Features:
 12. Users can follow/unfollow public users with button that toggles between follow/unfollow
 13. Users can request to follow private users
 14. Private users can choose to accept/reject follower requests
+15. Disable follow button if request is already sent
 
 Features to add:
 - In-app notifications ?
 - https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xxii-background-jobs
 - Show list of followers/following on user dashboard
+- Show pending requests/approvals, allow user to delete requests
 
 ---- to fix ----
 1. Add slide buttons to carousel
@@ -43,15 +45,27 @@ Features to add:
 4. users.search - used "search"
 5. posts.create
 
-12 July 2021 (to review & fix)
-1. donations/views.py
+<!-- 13 July 2021 -->
+<!-- - followers/views.py
+	- Line 41 [modified]
+		- Here, the follow was only found based on who is the idol, so the follower here can be anyone, you might wanna include a condition for the follower as well so that you don't delete the wrong follow
+		- e.g. User 1 follows User 2, User 3 also follows User 2, which follow would it delete?
+		- I think this happens for your other follow related stuff as well, so you might wanna fix those too
+	- Line 82 [modified]
+		- In theory this should be a post request as well, but its not a big deal
+- feed.html
+	- Line 10 [modified]
+		- There is a n + 1 here, so you might wanna prefetch the images -->
+
+<!-- 12 July 2021 -->
+<!-- 1. donations/views.py
 	- Line 29, 32 [modified]
 		- Since these two lines are actually identical, you can skip the one on line 29, and remove the else on line 32, that way both conditions will lead to "post/show.html" on error
 2. users/views.py
-	- Line 123 
+	- Line 123 [modified]
 		- This part can be done by using list comprehension to shorten code, e.g.
 		sum([d.amount for d in [d for d in i.donations]])
-		- Theres also n + 1 happening here, for each image, get donations use prefetch here to prevent that, you can prefetch more than two things, https://docs.peewee-orm.com/en/latest/peewee/api.html?highlight=prefetch#prefetch
+		- Theres also n + 1 happening here, for each image, get donations use prefetch here to prevent that, you can prefetch more than two things, https://docs.peewee-orm.com/en/latest/peewee/api.html?highlight=prefetch#prefetch -->
 
 <!-- 7 July 2021 -->
 <!-- ---- current issues ----
